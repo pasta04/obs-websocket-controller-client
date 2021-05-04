@@ -90,12 +90,12 @@ const App: React.FC = () => {
     if (load.data) dispatch({ type: getType(actions.updateCommandList), payload: load.data });
 
     // OBSと接続
-    if (load.config.obswsUrl) {
+    if (load.config?.obswsUrl) {
       startObs(load.config.obswsUrl);
     }
 
     // Managerと接続
-    if (load.config.managerwsUrl) {
+    if (load.config?.managerwsUrl) {
       util.manager.init(load.config.managerwsUrl);
     }
 
@@ -275,6 +275,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className={classes.content}>{setting ? settingsView() : viewType ? commandView() : obsBasedView()}</div>
+        {!state.config.obswsUrl && 'まずは右上のアイコンから設定してね'}
         <div className={classes.footer}>
           <div className={classes.footerInner}>
             <div style={{ width: '30vw', float: 'right' }}>
