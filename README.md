@@ -1,2 +1,1 @@
-# Aikatsu Planet Swing Simulator
-
+# OBS
