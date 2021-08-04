@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "obs-websocket-controller",
+    "slug": "obs-websocket-controller",
+    "version": "1.0.0",
+    "orientation": "landscape",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "requireFullScreen": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#FFFFFF",
+      "translucent": true
+    },
+    "androidNavigationBar": {
+      "visible": "immersive"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "build": {
+        "babel": {
+          "include": ["@codler/react-native-keyboard-aware-scroll-view"]
+        }
+      }
+    }
+  }
+}
