@@ -23,7 +23,14 @@ const Layout = (stateConfig: GlobalState['config']) => {
     const newConfig = createNewConfig();
     console.log(newConfig);
 
-    util.obs.closeConnect();
+    util.obs.default.stop();
+    util.obs.default.init(newConfig.obswsUrl);
+    util.obs.default.start();
+
+    util.manager.default.stop();
+    util.manager.default.init(newConfig.managerwsUrl);
+    util.manager.default.start();
+
     util.storage.saveLocalStorageConfig(newConfig);
   };
   const createNewConfig = () => {

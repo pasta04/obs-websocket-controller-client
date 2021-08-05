@@ -4,12 +4,10 @@ import { Box, Button, Container, Icon } from 'native-base';
 import * as util from '../util';
 import reducer, { initialState } from '../reducers';
 import * as actions from '../actions';
-import { Scene } from 'obs-websocket-js';
 import { getType } from 'typesafe-actions';
 import useInterval from 'use-interval';
 import { GlobalState, OBSCommand } from '../global';
 import { execAction } from '../util/exeCommand';
-import { sleep } from '../util/common';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
@@ -53,119 +51,42 @@ const Layout = (props: PropType) => {
   const [obsImage, setObsImage] = useState('');
 
   React.useEffect(() => {
-    init();
+    util.obs.default.on('open', () => {
+      console.log('obs - connected');
+      dispatch({ type: getType(actions.updateObsConnectionStatus), payload: { connection: true, connectionInfo: 'ok' } });
+    });
+    util.obs.default.on('close', (reason) => {
+      console.log('obs - disconnected');
+      dispatch({ type: getType(actions.updateObsConnectionStatus), payload: { connection: false, connectionInfo: reason } });
+    });
+    util.obs.default.ws.on('ScenesChanged', (data) => {
+      console.log('obs - ScenesChanged');
+      console.log(data);
+    });
+    util.obs.default.ws.on('Heartbeat', (data) => {
+      dispatch({ type: getType(actions.updateObsHeatbeat), payload: data });
+    });
+
+    util.manager.default.on('open', () => {
+      console.log('manager - connected');
+      dispatch({ type: getType(actions.updateManagerConnectionStatus), payload: { connection: true, connectionInfo: 'ok' } });
+    });
+    util.manager.default.on('close', (reason) => {
+      console.log('manager - disconnected');
+      dispatch({ type: getType(actions.updateManagerConnectionStatus), payload: { connection: false, connectionInfo: reason } });
+    });
   }, []);
 
-  // React.useEffect(() => {
-  //   if (!isConnectedObs) obsConnect();
-  // }, [JSON.stringify(props.config.obswsUrl)]);
-
-  const init = async () => {
-    // OBSと接続
-    initObs();
-    // connection();
-  };
-
-  const obsConnect = () => {
-    if (props.config.obswsUrl) {
-      util.obs.startConnect(props.config.obswsUrl);
-      // startObs('192.168.100.100:4444');
-    } else {
-      console.log(`OBSのURLが未指定 obswsUrl = ${props.config.obswsUrl}`);
-    }
-  };
-
-  const mngConnect = () => {
-    if (props.config?.managerwsUrl) {
-      util.manager.init(props.config.managerwsUrl);
-    } else {
-      console.log(`OBSのURLが未指定 obswsUrl = ${props.config.obswsUrl}`);
-    }
-  };
+  // URLが変わったら再接続する
+  React.useEffect(() => {
+    util.obs.default.init(props.config.obswsUrl);
+    util.obs.default.start();
+  }, [props.config.obswsUrl]);
 
   React.useEffect(() => {
-    console.log('configが変わった');
-    const id = new Date().getTime().toString();
-    util.storage.saveAny('id', id);
-    checkObsConnection(id);
-  }, [JSON.stringify(props.config)]);
-
-  const checkObsConnection = async (id: string) => {
-    console.log(`checkObsConnection ${id}`);
-    const nowId = await util.storage.loadAny('id');
-    if (id !== nowId) return;
-
-    try {
-      if (!window.obsWs) throw new Error('まだナイヨ');
-
-      if ((await util.storage.loadAny('obsconnect')) !== '1') {
-        obsConnect();
-      } else {
-        const result = await window.obsWs.send('GetSceneList');
-        if (result.status === 'ok') {
-          util.storage.saveAny('sceneList', JSON.stringify(result.scenes));
-        }
-      }
-    } catch (e) {
-      //
-    }
-
-    await sleep(1000);
-
-    checkObsConnection(id);
-  };
-
-  const checkMngConnection = async (id: string) => {
-    console.log(`checkMngConnection ${id}`);
-    const nowId = await util.storage.loadAny('id');
-    if (id !== nowId) return;
-
-    try {
-      if (!window.managerWs) throw new Error('まだナイヨ');
-
-      if ((await util.storage.loadAny('mngconnect')) !== '1') {
-        mngConnect();
-      }
-    } catch (e) {
-      //
-    }
-
-    await sleep(1000);
-
-    checkMngConnection(id);
-  };
-
-  const initObs = async () => {
-    console.log('startObs');
-    try {
-      const obs = util.obs.init();
-      util.storage.saveAny('obsconnect', '0');
-      console.log('成功');
-
-      obs.on('ConnectionOpened', (data) => {
-        obs.send('SetHeartbeat', { enable: true });
-        dispatch({ type: getType(actions.updateObsConnectionStatus), payload: { connection: true, connectionInfo: 'ok' } });
-        util.storage.saveAny('obsconnect', '1');
-      });
-      obs.on('ConnectionClosed', (data) => {
-        console.log('obs - ConnectionClosed');
-        console.log(data);
-        dispatch({ type: getType(actions.updateObsConnectionStatus), payload: { connection: false, connectionInfo: 'ng' } });
-        util.storage.saveAny('obsconnect', '0');
-      });
-      obs.on('ScenesChanged', (data) => {
-        console.log('obs - ScenesChanged');
-        console.log(data);
-      });
-      obs.on('Heartbeat', (data) => {
-        dispatch({ type: getType(actions.updateObsHeatbeat), payload: data });
-      });
-    } catch (e) {
-      console.error(e);
-      // await sleep(1000);
-      // startObs(url, pass);
-    }
-  };
+    util.manager.default.init(props.config.managerwsUrl);
+    util.manager.default.start();
+  }, [props.config.managerwsUrl]);
 
   // OBSで配信中の画像
   useInterval(async () => {
@@ -177,6 +98,14 @@ const Layout = (props: PropType) => {
     });
     setObsImage(res.img);
   }, 2000);
+
+  useInterval(async () => {
+    if (!window.obsWs || !state.obs.connection) return;
+    const result = await window.obsWs.send('GetSceneList');
+    if (result.status === 'ok') {
+      util.storage.saveAny('sceneList', JSON.stringify(result.scenes));
+    }
+  }, 1000);
 
   // マイクミュート状況の取得
   useInterval(async () => {

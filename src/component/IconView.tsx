@@ -1,15 +1,15 @@
 import React, { useReducer, useState } from 'react';
-import { StyleSheet, View, Dimensions, FlatList, Vibration } from 'react-native';
-import { Container, Box, Button } from 'native-base';
+import { View, Dimensions, FlatList, Vibration } from 'react-native';
+import { Container, Box } from 'native-base';
 import ImageButton from './ImageButton';
 import * as util from '../util';
 import reducer, { initialState } from '../reducers';
-import { ArrayItem, GlobalState, OBSCommand } from '../global';
-import useInterval from 'use-interval';
+import { GlobalState } from '../global';
+import { getType } from 'typesafe-actions';
+import * as actions from '../actions';
 
 type ComponentTypes = {
   itemList: { uri: string; id: string }[];
-  img: string;
   config: GlobalState['config'];
 };
 const ONE_SECOND_IN_MS = 1000;
@@ -21,7 +21,6 @@ const Layout = (props: PropType) => {
 
   const [itemList, setItemList] = useState<{ uri: string; id: string }[]>([]);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [obsImage, setObsImage] = useState('');
 
   const [iconSize, setIconSize] = useState(props.config.iconSize);
   const [colNum, setColNum] = useState(Math.floor(Dimensions.get('window').width / (25 + iconSize)));
@@ -31,11 +30,16 @@ const Layout = (props: PropType) => {
   }, [props.config.iconSize.toString()]);
 
   React.useEffect(() => {
+    util.manager.default.on('data', (data) => {
+      dispatch({ type: getType(actions.updateCommandList), payload: data });
+    });
+  }, []);
+
+  React.useEffect(() => {
     // 引数が変わった
     setItemList(props.itemList);
-    setObsImage(props.img);
     // console.log(props.img);
-  }, [JSON.stringify(props.itemList), props.img]);
+  }, [JSON.stringify(props.itemList)]);
 
   /** タップしたら振動 */
   const onPressButton = (id: string) => {

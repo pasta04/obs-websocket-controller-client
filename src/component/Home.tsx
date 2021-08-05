@@ -113,9 +113,8 @@ const Layout = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [config, setConfig] = useState(initialState.config);
   const [sceneList, setSceneList] = useState<Scene[]>([]);
-  const [obsImage, setObsImage] = useState('');
   const [viewType, setViewType] = useState(false);
-  const [setting, setSetting] = useState(false);
+  const [setting, setSetting] = useState(true);
 
   const toggleSetting = () => {
     console.log('openSetting');
@@ -154,12 +153,6 @@ const Layout = () => {
     }
   }, 500);
 
-  // useInterval(async () => {
-  //   if (!window.obsWs || !state.obs.connection) return;
-  //   const res = await window.obsWs.send('GetSceneList');
-  //   setSceneList(res.scenes);
-  // }, 4000);
-
   const viewList = () => {
     if (setting) {
       return <Setting {...config} />;
@@ -167,7 +160,7 @@ const Layout = () => {
     if (viewType) {
       return <SceneView config={config} sceneList={sceneList} />;
     }
-    return <IconView itemList={itemList} img={obsImage} config={config} />;
+    return <IconView itemList={itemList} config={config} />;
   };
 
   return (
