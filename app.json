@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "obs-websocket-controller",
-    "slug": "obs-websocket-controller",
+    "name": "makotsun",
+    "slug": "makotsun",
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
@@ -19,10 +19,12 @@
       "requireFullScreen": true
     },
     "android": {
+      "package": "com.pasta04.makotsun",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "VIBRATE"]
     },
     "androidStatusBar": {
       "backgroundColor": "#FFFFFF",
@@ -38,6 +40,9 @@
           "include": ["@codler/react-native-keyboard-aware-scroll-view"]
         }
       }
-    }
+    },
+    "sdkVersion": "41.0.0",
+    "description": "",
+    "githubUrl": "https://github.com/pasta04/obs-websocket-controller-client"
   }
 }
