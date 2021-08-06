@@ -6,6 +6,7 @@ class Obs extends EventEmitter {
     super();
 
     this.ws.on('ConnectionOpened', (data) => {
+      this.ws.send('SetHeartbeat', { enable: true });
       this.conncected = true;
       this.emit('open');
     });

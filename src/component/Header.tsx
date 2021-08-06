@@ -66,6 +66,7 @@ const Layout = (props: PropType) => {
       console.log('obs - ScenesChanged');
       console.log(data);
     });
+    // fpsとか
     util.obs.default.ws.on('Heartbeat', (data) => {
       dispatch({ type: getType(actions.updateObsHeatbeat), payload: data });
     });
