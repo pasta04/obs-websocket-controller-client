@@ -38,7 +38,7 @@ const Layout = () => {
 
   useInterval(async () => {
     const load = await util.storage.loadStorage();
-    if (JSON.stringify(load.config) !== JSON.stringify(config)) setConfig(load.config);
+    if (load.config && JSON.stringify(load.config) !== JSON.stringify(config)) setConfig(load.config);
 
     const sceneListtmp = await util.storage.loadAny('sceneList');
     if (!sceneListtmp) return;

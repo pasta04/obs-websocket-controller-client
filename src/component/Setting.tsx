@@ -51,14 +51,14 @@ const Layout = (stateConfig: GlobalState['config']) => {
         <Box display={'flex'} flexDirection={'row'}>
           <Box>
             <Text style={styles.text}>OBS WebSocket URL</Text>
-            <Input variant="outline" backgroundColor={'white'} value={obswsUrl} onChangeText={(text) => setObsUrl(text)} width={300} />
+            <Input type={'url'} variant="outline" backgroundColor={'white'} value={obswsUrl} onChangeText={(text) => setObsUrl(text)} width={300} />
           </Box>
 
           <Box margin={4} />
 
           <Box>
             <Text style={styles.text}>Manager URL</Text>
-            <Input variant="outline" backgroundColor={'white'} value={managerwsUrl} onChangeText={(text) => setmanagerwsUrl(text)} width={300} />
+            <Input type={'url'} variant="outline" backgroundColor={'white'} value={managerwsUrl} onChangeText={(text) => setmanagerwsUrl(text)} width={300} />
           </Box>
         </Box>
 
@@ -70,7 +70,7 @@ const Layout = (stateConfig: GlobalState['config']) => {
           <Box margin={4} />
           <Box>
             <Text style={styles.text}>音声ソース マイク名</Text>
-            <Input variant="outline" backgroundColor={'white'} value={micSrcName} onChangeText={(text) => setmicSrcName(text)} width={300} />
+            <Input type={'number'} variant="outline" backgroundColor={'white'} value={micSrcName} onChangeText={(text) => setmicSrcName(text)} width={300} />
           </Box>
         </Box>
 
