@@ -59,6 +59,9 @@ const Layout = (props: PropType) => {
       console.log('obs - disconnected');
       dispatch({ type: getType(actions.updateObsConnectionStatus), payload: { connection: false, connectionInfo: reason } });
     });
+    util.obs.default.on('error', (error) => {
+      // 特に通知することは無い
+    });
     util.obs.default.ws.on('ScenesChanged', (data) => {
       console.log('obs - ScenesChanged');
       console.log(data);
@@ -79,13 +82,17 @@ const Layout = (props: PropType) => {
 
   // URLが変わったら再接続する
   React.useEffect(() => {
-    util.obs.default.init(props.config.obswsUrl);
-    util.obs.default.start();
+    if (props.config.obswsUrl) {
+      util.obs.default.init(props.config.obswsUrl);
+      util.obs.default.start();
+    }
   }, [props.config.obswsUrl]);
 
   React.useEffect(() => {
-    util.manager.default.init(props.config.managerwsUrl);
-    util.manager.default.start();
+    if (props.config.managerwsUrl) {
+      util.manager.default.init(props.config.managerwsUrl);
+      util.manager.default.start();
+    }
   }, [props.config.managerwsUrl]);
 
   // OBSで配信中の画像

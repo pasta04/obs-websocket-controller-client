@@ -11,110 +11,11 @@ import Header from './Header';
 import * as util from '../util';
 
 const Layout = () => {
-  const [itemList, setItemList] = useState<{ uri: string; id: string }[]>([
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '1',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '2',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '3',
-    },
-    {
-      uri: 'https://mypage.aikatsu.com/images/logo.png',
-      id: '4',
-    },
-  ]);
-
   const [state, dispatch] = useReducer(reducer, initialState);
   const [config, setConfig] = useState(initialState.config);
   const [sceneList, setSceneList] = useState<Scene[]>([]);
   const [viewType, setViewType] = useState(false);
-  const [setting, setSetting] = useState(true);
+  const [setting, setSetting] = useState(false);
 
   const toggleSetting = () => {
     console.log('openSetting');
@@ -145,10 +46,6 @@ const Layout = () => {
     const resNameList = ressceneList.map((item) => item.name);
     const orgNameList = sceneList.map((item) => item.name);
     if (JSON.stringify(resNameList) !== JSON.stringify(orgNameList)) {
-      console.log(resNameList);
-      console.log(orgNameList);
-
-      console.log('Scene更新');
       setSceneList(ressceneList);
     }
   }, 500);
@@ -160,7 +57,7 @@ const Layout = () => {
     if (viewType) {
       return <SceneView config={config} sceneList={sceneList} />;
     }
-    return <IconView itemList={itemList} config={config} />;
+    return <IconView config={config} />;
   };
 
   return (

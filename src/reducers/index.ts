@@ -51,56 +51,7 @@ export const initialState: GlobalState = {
     connection: false,
     connectionInfo: '',
   },
-  data: [
-    // {
-    //   id: '1',
-    //   icon: '',
-    //   title: 'お待ち下さい',
-    //   command: [
-    //     {
-    //       target: 'obsws',
-    //       type: 'changeScene',
-    //       data: 'お待ちください',
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: '2',
-    //   icon: '',
-    //   title: 'おわり',
-    //   command: [
-    //     {
-    //       target: 'obsws',
-    //       type: 'changeScene',
-    //       data: 'おわり',
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: '3',
-    //   icon: '',
-    //   title: '16_9ゲー',
-    //   command: [
-    //     {
-    //       target: 'obsws',
-    //       type: 'changeScene',
-    //       data: '16_9ゲー',
-    //     },
-    //   ],
-    // },
-    {
-      id: '4',
-      icon: '',
-      title: 'マイクミュート切り替え',
-      command: [
-        {
-          target: 'obsws',
-          type: 'toggleMute',
-          data: 'マイク',
-        },
-      ],
-    },
-  ],
+  data: [],
 };
 
 const reducer = (state: GlobalState = initialState, action: Action): GlobalState => {

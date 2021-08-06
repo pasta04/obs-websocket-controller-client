@@ -1,3 +1,5 @@
+import { Vibration } from 'react-native';
+
 /**
  * JSONの取得
  * @param url 取得先のURL
@@ -49,3 +51,12 @@ export const postFile = async (url: string, file: File) => {
 };
 
 export const sleep = (msec: number) => new Promise((resolve) => setTimeout(resolve, msec));
+
+const ONE_SECOND_IN_MS = 1000;
+/** ちょっと振動する */
+export const vibe = async () => {
+  Vibration.vibrate(0.3 * ONE_SECOND_IN_MS);
+};
+export const longvibe = async () => {
+  Vibration.vibrate(0.6 * ONE_SECOND_IN_MS);
+};

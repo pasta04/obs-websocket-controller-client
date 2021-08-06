@@ -12,6 +12,11 @@ class Obs extends EventEmitter {
     this.ws.on('ConnectionClosed', (data) => {
       this.conncected = false;
       this.emit('close', '');
+      if (this.isReconnect) {
+        setTimeout(() => {
+          this.connect();
+        }, this.reconnectInterval);
+      }
     });
 
     window.obsWs = this.ws;
@@ -21,7 +26,7 @@ class Obs extends EventEmitter {
   endpoint: string = '';
   password: string | undefined = undefined;
   isReconnect = false;
-  reconnectInterval = 1000;
+  reconnectInterval = 2000;
 
   conncected: boolean = false;
 
@@ -29,21 +34,29 @@ class Obs extends EventEmitter {
     this.endpoint = endpoint;
   }
 
-  public start() {
+  public async start() {
+    // 多重実行を防止
+    if (this.isReconnect) return;
+
+    this.isReconnect = true;
+    this.connect();
+  }
+
+  private async connect() {
     try {
       if (!this.endpoint) {
-        setTimeout(() => {
-          return this.start();
+        setTimeout(async () => {
+          return await this.connect();
         }, 1000);
       } else {
-        this.isReconnect = true;
-        console.log(`start ${this.conncected}`);
-
         if (this.conncected) this.ws.disconnect();
-        this.ws.connect({ address: this.endpoint, password: this.password });
+        this.ws.connect({ address: this.endpoint, password: this.password }).catch((error) => {
+          this.emit('error', error);
+          // console.log(error);
+        });
       }
     } catch (e) {
-      this.emit('error', e);
+      //
     }
   }
 
@@ -59,7 +72,7 @@ class Obs extends EventEmitter {
 
   public on(event: 'open', listener: () => void): this;
   public on(event: 'close', listener: (reason: string) => void): this;
-  public on(event: 'error', listener: (err: Error) => void): this;
+  public on(event: 'error', listener: (error: object) => void): this;
   public on(event: string | symbol, listener: (...args: any[]) => void): this {
     return super.on(event, listener);
   }

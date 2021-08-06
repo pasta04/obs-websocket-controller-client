@@ -1,18 +1,13 @@
-import React, { useReducer, useState } from 'react';
-import { StyleSheet, View, Dimensions, FlatList, Vibration } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList } from 'react-native';
 import { Container, Box, Button, Text } from 'native-base';
-import ImageButton from './ImageButton';
 import * as util from '../util';
-import reducer, { initialState } from '../reducers';
-import { ArrayItem, GlobalState, OBSCommand, Scene } from '../global';
-import useInterval from 'use-interval';
+import { GlobalState, Scene } from '../global';
 
 type ComponentTypes = {
   config: GlobalState['config'];
   sceneList: Scene[];
 };
-const ONE_SECOND_IN_MS = 1000;
-
 type PropType = ComponentTypes;
 
 const Layout = (props: PropType) => {
@@ -27,7 +22,7 @@ const Layout = (props: PropType) => {
     window.obsWs.send('SetCurrentScene', {
       'scene-name': sceneName,
     });
-    Vibration.vibrate(0.3 * ONE_SECOND_IN_MS);
+    util.common.vibe();
   };
 
   return (

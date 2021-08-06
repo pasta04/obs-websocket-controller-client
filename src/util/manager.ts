@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { GlobalState } from '../global';
 
 class Manager extends EventEmitter {
   constructor() {
@@ -30,7 +31,7 @@ class Manager extends EventEmitter {
           // dataのチェック
           if (!this.isValidData(data)) return;
 
-          this.emit('data', data);
+          this.emit('data', data as GlobalState['data']);
         };
 
         ws.onclose = (event) => {
@@ -75,7 +76,7 @@ class Manager extends EventEmitter {
   }
 
   // イベント
-  public on(event: 'data', listener: (data: any) => void): this;
+  public on(event: 'data', listener: (data: GlobalState['data']) => void): this;
   public on(event: 'open', listener: () => void): this;
   public on(event: 'close', listener: (reason: string) => void): this;
   public on(event: 'error', listener: (err: Error) => void): this;

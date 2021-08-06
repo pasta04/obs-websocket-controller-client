@@ -20,10 +20,9 @@ export const exeObsCommand = (command: OBSCommand) => {
 
   switch (command.type) {
     case 'changeScene': {
-      const item = {
-        'scene-name': command.data,
-      };
-      window.obsWs.send('SetCurrentScene', item);
+      window.obsWs.send('SetCurrentScene', {
+        'scene-name': command.data, // シーン名
+      });
       break;
     }
     case 'startStream': {
@@ -44,7 +43,7 @@ export const exeObsCommand = (command: OBSCommand) => {
     }
     case 'toggleMute': {
       window.obsWs.send('ToggleMute', {
-        source: command.data,
+        source: command.data, // 音声ソース名
       });
       break;
     }
@@ -52,7 +51,7 @@ export const exeObsCommand = (command: OBSCommand) => {
 };
 
 const exePcCommand = (command: PCCommand) => {
-  console.warn('未実装');
+  if (!window.managerWs) return;
   window.managerWs.send(
     JSON.stringify({
       type: 'exec',
